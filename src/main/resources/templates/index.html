@@ -39,10 +39,42 @@
 				<td>
 					<a th:href="@{/delete/{id}(id=${empleado.id})}">Eliminar</a>
 				</td>
+				<td>
+					<a th:href="@{/new/empleado(id=${empleado.id})}">Modificar</a>
+				</td>
 			</tr>
 	</table>
 	<br>
 	<a th:href="@{/new/empleado}">Nuevo empleado</a>
+	<br>
+	<br>
+	<br>
+	<br>
+	<h1>Lista de empleados mejorada</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>DNI</th>
+				<th>Nombre</th>
+				<th>Apellido</th>
+				<th>Acción</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="empleado : ${empleados}">
+				<td th:text="${empleado.dni}"></td>
+				<td th:text="${empleado.nombre}"></td>
+				<td th:text="${empleado.apellidos}"></td>
+				<td>
+					<button class="delete-button" th:href="@{/delete/{id}(id=${empleado.id})}">Eliminar</button>
+				</td>
+				<td>
+					<button class="update-button" th:href="@{/new/empleado(id=${empleado.id})}">Modificar</button>
+				</td>
+			</tr>
+	</table>
+	<br>
+	<button id="newEmp" th:href="@{/new/empleado}">Nuevo empleado</button>
 </body>
 
 </html>
