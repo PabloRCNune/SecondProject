@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Empleado</title>
+</head>
+<body>
+    <h1>Nuevo Empleado</h1>
+
+    <!--Modificar el formulario para que no vaya por summit si no con un boton por js-->
+    <form action="#" th:action="@{/save(id=${empleado.id})}" method="post" th:object="${empleado}">
+        <div>
+            <label for="dni">DNI:</label>
+            <input type="text" id="dni" name="dni" th:field="*{dni}" required>
+        </div>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" th:field="*{nombre}" required>
+        </div>
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" name="apellidos" th:field="*{apellidos}" required>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <button th:href="@{/}">Volver a la lista de empleados</button>
+</body>
+</html>

@@ -20,6 +20,7 @@ public class EmpleadoController {
 	@GetMapping({ "/", "/lista", "/home" })
 	public String listEmpleados(Model model) {
 		model.addAttribute("empleados", empleadoRepo.findAll());
+		
 		return "index";
 	}
 
@@ -44,20 +45,20 @@ public class EmpleadoController {
 		return "redirect:/lista";
 
 	}
-	@GetMapping("/new/empleado2")
+	@GetMapping("/new/empleado/buttons")
 	public String newEmpleadoButtons(Model model, @RequestParam(name = "id",required = false, defaultValue = "-1") long empleadoId) {
 		Empleado empleado = empleadoRepo.findById(empleadoId).orElse(new Empleado());
 		model.addAttribute("empleado", empleado);
 		return "newEmpleado";
 	}
 	
-	@GetMapping("/delete/{id}")
+	@GetMapping("/delete/buttons/{id}")
 	public String removeEmpleadoButtons(@PathVariable long id) {
 		empleadoRepo.deleteById(id);
 		return "redirect:/lista";
 	}
 	
-	@PostMapping("/save")
+	@PostMapping("/save/buttons")
 	public String saveEmpleadoButtons(@ModelAttribute Empleado empleado, @RequestParam long id) {
 		empleado.setId(id);
 		System.out.println("Empleado: " + empleado);
