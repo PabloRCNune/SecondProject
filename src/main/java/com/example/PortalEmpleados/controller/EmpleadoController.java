@@ -1,6 +1,7 @@
 package com.example.PortalEmpleados.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.PortalEmpleados.entity.Empleado;
-import com.example.PortalEmpleados.repo.EmpleadoRepo;
 import com.example.PortalEmpleados.services.EmpServices;
 
 @Controller
@@ -54,19 +54,23 @@ public class EmpleadoController {
 	}
 	
 	@GetMapping("/delete/buttons/{id}")
-	public String removeEmpleadoButtons(@PathVariable long id) {
+	public ResponseEntity<String> removeEmpleadoButtons(@PathVariable long id) {
 		empservices.deleteEmpleado(id);
-		HttpHeader
-		return "redirect:/lista";
+		return ResponseEntity.ok("Eliminado con exito");
 	}
 	
 	@PostMapping("/save/buttons")
 	public String saveEmpleadoButtons(@ModelAttribute Empleado empleado, @RequestParam long id) {
 		empleado.setId(id);
-		System.out.println("Empleado: " + empleado);
 		empservices.saveOrUpdateEmpleado(empleado);
 		return "redirect:/lista";
 		
 	}
-
+	
+	 @GetMapping("/tabla2")
+	 public String actualizarTabla(Model model) {
+        model.addAttribute("empleados", empservices.getAllEmpleados());
+        return "fragmentos/segundatabla :: tabla2"; 
+	 }
+	
 }
