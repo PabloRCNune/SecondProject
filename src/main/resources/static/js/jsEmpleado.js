@@ -91,7 +91,7 @@ function updateEmpleado() {
 	const id = this.getAttribute("data-el_id");
 	fetch(`http://localhost:8080/PortalEmpleados/update/buttons/${id}`).then(response => {
         if (response.ok) {
-            
+            reloadPage(0);
         } else {
             console.error("Error al eliminar el empleado");
         }
