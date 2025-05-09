@@ -5,7 +5,7 @@
 </head>
 <body>
 	<div th:fragment="tabla2">
-		<table id="tabla2">
+		<table>
 			<thead>
 				<tr>
 					<th>DNI</th>
@@ -15,6 +15,7 @@
 				</tr>
 			</thead>
 			<tbody>
+				<!--
 				<tr th:each="empleado : ${empleados}">
 					<td th:text="${empleado.dni}"></td>
 					<td th:text="${empleado.nombre}"></td>
@@ -25,9 +26,12 @@
 					<td>
 						<button class="updatebtn" th:attr="data-el_id=${empleado.id}">Modificar</button>
 					</td>
-				</tr>
+				</tr>					
+				-->
 			</tbody>
 		</table>
+	    <button id="prevBtn">Página Anterior</button>
+	    <button id="nextBtn">Página Siguiente</button>
 	</div>
 </body>
 </html>
