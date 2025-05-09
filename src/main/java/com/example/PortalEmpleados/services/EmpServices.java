@@ -3,6 +3,9 @@ package com.example.PortalEmpleados.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.PortalEmpleados.entity.Empleado;
@@ -28,5 +31,10 @@ public class EmpServices {
 	
 	public void deleteEmpleado(long id) {
 		empleadoRepo.deleteById(id);
+	}
+	
+	public Page<Empleado> getEmployeesByPage(int page, int size){
+		Pageable pageable = PageRequest.of(page, size);
+		return empleadoRepo.findAll(pageable);
 	}
 }
