@@ -1,31 +1,118 @@
+let paginaActual = 0;
+const tamanoPagina = 10;
+let tabla = document.getElementById("tabla2-container").getElementsByTagName("table")[0];
+let prevBtn = document.getElementById("prevBtn");
+let nextBtn = document.getElementById("nextBtn");
 
 document.getElementById("newEmp").addEventListener("click", function() {
-    window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons");ç
+	window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons"); ç
 });
 
-AssingDeleteButton();
 
-function UpdateTable(){
-    let tabla = document.getElementById("tabla2-container");
-    fetch('http://localhost:8080/PortalEmpleados/tabla2').then(response => response.text()).then(data => {
-        tabla.innerHTML = data;
-        AssingDeleteButton();
-}).catch(error => console.error("Error al cargar la tabla:", error));
+
+document.addEventListener("DOMContentLoaded", function() {
+	reloadPage(0);
+});
+
+
+prevBtn.addEventListener("click", () => reloadPage(-1));
+nextBtn.addEventListener("click", () => reloadPage(1));
+
+function reloadPage(siguiente) {
+	paginaActual += siguiente;
+	if (paginaActual < 0) paginaActual = 0;
+
+	fetch(`http://localhost:8080/PortalEmpleados/api/tabla2?page=${paginaActual}&size=${tamanoPagina}`)
+		.then(response => response.json())
+		.then(data => {
+			updateTable(data.content)
+			updateButtons(data);
+		})
+		.catch(error => console.error('Error:', error));
 }
 
-function AssingDeleteButton(){
-    let btnsDelete = document.getElementsByClassName("deletebtn");
+function updateButtons(data) {
+	prevBtn.disabled = (paginaActual === 0);
+	nextBtn.disabled = (data.content.length < tamanoPagina);
+}
+	
 
-    for (const element of btnsDelete) {
-    element.addEventListener("click", function() {
-        const id = this.getAttribute("data-el_id");
-        fetch(`http://localhost:8080/PortalEmpleados/delete/buttons/${id}`).then(response => {
-			if (response.ok) {
-                UpdateTable();
-			}else {
-                console.error("Error al eliminar el empleado");
-            }
-		});
+function updateTable(empleados) {
+	const cuerpoTabla = tabla.getElementsByTagName("tbody")[0];
+	cuerpoTabla.innerHTML = "";
+
+	empleados.forEach(empleado => {
+		newRowTable(cuerpoTabla, empleado.id, empleado.dni, empleado.nombre, empleado.apellidos);
+	});
+}
+
+function newRowTable(tableBody, id, ...valores) {
+	let tableRow = document.createElement("tr");
+	valores.forEach(element => {
+		let dato = document.createElement("td");
+		let text = document.createTextNode(element);
+		dato.appendChild(text);
+		tableRow.appendChild(dato);
+	});
+	let datoBtnDelete = document.createElement("td");
+	let btnDelete = document.createElement("button");
+	let nameBtnDelete = document.createTextNode("Eliminar");
+	btnDelete.appendChild(nameBtnDelete);
+	btnDelete.setAttribute("data-el_id", id);
+	btnDelete.addEventListener("click", deleteEmpleado);
+
+	datoBtnDelete.appendChild(btnDelete);
+
+	let datoBtnUpdate = document.createElement("td");
+	let btnUpdate = document.createElement("button");
+	let nameBtnUpdate = document.createTextNode("Modificar");
+	btnUpdate.appendChild(nameBtnUpdate);
+	btnUpdate.setAttribute("data-el_id", id);
+	datoBtnUpdate.appendChild(btnUpdate);
+
+	tableRow.appendChild(datoBtnDelete);
+	tableRow.appendChild(datoBtnUpdate);
+	tableBody.appendChild(tableRow);
+}
+
+function deleteEmpleado() {
+	const id = this.getAttribute("data-el_id");
+	fetch(`http://localhost:8080/PortalEmpleados/delete/buttons/${id}`).then(response => {
+		if (response.ok) {
+			tabla.deleteRow(this.parentElement.parentElement.rowIndex )
+		} else {
+			console.error("Error al eliminar el empleado");
+		}
+	});
+
+}
+
+function updateEmpleado() {
+	const id = this.getAttribute("data-el_id");
+	fetch(`http://localhost:8080/PortalEmpleados/update/buttons/${id}`).then(response => {
+        if (response.ok) {
+            
+        } else {
+            console.error("Error al eliminar el empleado");
+        }
     });
 }
+/*
+function AssingModButton(){
+	let btns = document.getElementsByClassName("updatebtn");
+
+	for (const element of btns) {
+		element.addEventListener("click", function() {
+			const id = this.getAttribute("data-el_id");
+			fetch(`http://localhost:8080/PortalEmpleados/new/empleado/buttons?id=${empleado.id}`).then(response => {
+				if (response.ok) {
+					UpdateTable();
+				}else {
+					console.error("Error al eliminar el empleado");
+				}
+			});
+		});
+	}
 }
+
+*/
