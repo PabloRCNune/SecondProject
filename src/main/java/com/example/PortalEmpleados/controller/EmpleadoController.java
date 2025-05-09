@@ -1,5 +1,7 @@
 package com.example.PortalEmpleados.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -60,17 +62,17 @@ public class EmpleadoController {
 	}
 	
 	@PostMapping("/save/buttons")
-	public String saveEmpleadoButtons(@ModelAttribute Empleado empleado, @RequestParam long id) {
+	public ResponseEntity<String> saveEmpleadoButtons(@ModelAttribute Empleado empleado, @RequestParam long id) {
 		empleado.setId(id);
 		empservices.saveOrUpdateEmpleado(empleado);
-		return "redirect:/lista";
+		return ResponseEntity.ok("El empleado se ha guardo");
 		
 	}
-	
+	 
 	 @GetMapping("/tabla2")
-	 public String actualizarTabla(Model model) {
-        model.addAttribute("empleados", empservices.getAllEmpleados());
-        return "fragmentos/segundatabla :: tabla2"; 
+	 public ResponseEntity<List<Empleado>> actualizarTabla2() {
+		 return ResponseEntity.ok(empservices.getAllEmpleados());
+//		 return ResponseEntity.notFound().build();
 	 }
 	
 }
