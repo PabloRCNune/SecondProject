@@ -27,12 +27,10 @@ function reloadPage(siguiente) {
 		.then(data => {
 			if(data.content.length !== 0) {
 				updateTable(data.content)
-				
 			}else{
 				paginaActual--;
 			}
 			updateButtons(data.content.length);
-			
 		})
 		.catch(error => console.error('Error:', error));
 }
@@ -41,7 +39,6 @@ function updateButtons(numEmployees) {
 	prevBtn.disabled = (paginaActual === 0);
 	nextBtn.disabled = (numEmployees < tamanoPagina);
 }
-	
 
 function updateTable(empleados) {
 	const cuerpoTabla = tabla.getElementsByTagName("tbody")[0];
@@ -66,6 +63,7 @@ function newRowTable(tableBody, id, ...valores) {
 	btnDelete.appendChild(nameBtnDelete);
 	btnDelete.setAttribute("data-el_id", id);
 	btnDelete.addEventListener("click", deleteEmpleado);
+	btnDelete.setAttribute("class", "btn btn-outline-danger");
 
 	datoBtnDelete.appendChild(btnDelete);
 
@@ -77,6 +75,7 @@ function newRowTable(tableBody, id, ...valores) {
 	btnUpdate.addEventListener("click", ()=>{
 		window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons?id="+id);
 	});
+	btnUpdate.setAttribute("class", "btn btn-outline-secondary");
 	datoBtnUpdate.appendChild(btnUpdate);
 
 	tableRow.appendChild(datoBtnDelete);
@@ -96,6 +95,8 @@ function deleteEmpleado() {
 
 }
 
+//mirar luego
+/*
 function updateEmpleado() {
 	const id = this.getAttribute("data-el_id");
 	fetch(`http://localhost:8080/PortalEmpleados/update/buttons/${id}`).then(response => {
@@ -106,6 +107,7 @@ function updateEmpleado() {
         }
     });
 }
+*/
 /*
 function AssingModButton(){
 	let btns = document.getElementsByClassName("updatebtn");
