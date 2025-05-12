@@ -5,7 +5,7 @@ let prevBtn = document.getElementById("prevBtn");
 let nextBtn = document.getElementById("nextBtn");
 
 document.getElementById("newEmp").addEventListener("click", function() {
-	window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons"); ç
+	window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons");
 });
 
 
@@ -25,15 +25,21 @@ function reloadPage(siguiente) {
 	fetch(`http://localhost:8080/PortalEmpleados/api/tabla2?page=${paginaActual}&size=${tamanoPagina}`)
 		.then(response => response.json())
 		.then(data => {
-			updateTable(data.content)
-			updateButtons(data);
+			if(data.content.length !== 0) {
+				updateTable(data.content)
+				
+			}else{
+				paginaActual--;
+			}
+			updateButtons(data.content.length);
+			
 		})
 		.catch(error => console.error('Error:', error));
 }
 
-function updateButtons(data) {
+function updateButtons(numEmployees) {
 	prevBtn.disabled = (paginaActual === 0);
-	nextBtn.disabled = (data.content.length < tamanoPagina);
+	nextBtn.disabled = (numEmployees < tamanoPagina);
 }
 	
 
@@ -68,6 +74,9 @@ function newRowTable(tableBody, id, ...valores) {
 	let nameBtnUpdate = document.createTextNode("Modificar");
 	btnUpdate.appendChild(nameBtnUpdate);
 	btnUpdate.setAttribute("data-el_id", id);
+	btnUpdate.addEventListener("click", ()=>{
+		window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons?id="+id);
+	});
 	datoBtnUpdate.appendChild(btnUpdate);
 
 	tableRow.appendChild(datoBtnDelete);
