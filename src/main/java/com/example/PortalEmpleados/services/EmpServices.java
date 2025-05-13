@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import com.example.PortalEmpleados.entity.Empleado;
@@ -36,5 +39,11 @@ public class EmpServices {
 	public Page<Empleado> getEmployeesByPage(int page, int size){
 		Pageable pageable = PageRequest.of(page, size);
 		return empleadoRepo.findAll(pageable);
+	}
+	public PagedModel<EntityModel<Empleado>> getEmployeesByPage2(int page, int size){
+		PagedResourcesAssembler<Empleado> assembler = new PagedResourcesAssembler<>(null,null);
+		Pageable pageable=PageRequest.of(page, size);
+		Page<Empleado> employees  = empleadoRepo.findAll(pageable);
+		return assembler.toModel(employees);
 	}
 }

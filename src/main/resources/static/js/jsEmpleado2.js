@@ -3,22 +3,34 @@ const tamanoPagina = 10;
 let tabla = document.getElementById("tabla2-container").getElementsByTagName("table")[0];
 let prevBtn = document.getElementById("prevBtn");
 let nextBtn = document.getElementById("nextBtn");
+let firstBtn = document.getElementById("firstBtn");
+let lastBtn = document.getElementById("lastBtn");
 
 document.getElementById("newEmp").addEventListener("click", function() {
 	window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons");
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+	reloadPage2("http://localhost:8080/PortalEmpleados/api/empleados");
+});
 
-
+/*
 document.addEventListener("DOMContentLoaded", function() {
 	reloadPage(0);
 });
 
-
 prevBtn.addEventListener("click", () => reloadPage(-1));
 nextBtn.addEventListener("click", () => reloadPage(1));
+*/
+prevBtn.addEventListener("click", () => reloadPage2(prevBtn.getAttribute("href")));
+nextBtn.addEventListener("click", () => reloadPage2(nextBtn.getAttribute("href")));
+firstBtn.addEventListener("click", () => reloadPage2(firstBtn.getAttribute("href")));
+lastBtn.addEventListener("click", () => reloadPage2(lastBtn.getAttribute("href")));
 
-
+/* 
+ * El siguiente código es para la paginación de la tabla,
+ * 	es el antiguo sin la paginacion por Spring HATEOAS. 
+ */
 function reloadPage(siguiente) {
 	paginaActual += siguiente;
 	if (paginaActual < 0) paginaActual = 0;
@@ -36,12 +48,37 @@ function reloadPage(siguiente) {
 		.catch(error => console.error('Error:', error));
 }
 
-
 function updateButtons(numEmployees) {
 	prevBtn.disabled = (paginaActual === 0);
 	nextBtn.disabled = (numEmployees < tamanoPagina);
 }
 
+/*
+ * El siguiente código es para la paginación de la tabla,
+ * 	es el nuevo con la paginacion por Spring HATEOAS. 
+ */
+function reloadPage2(url) {
+	fetch(url).then(response => response.json())
+	.then(data => {
+		updateData(data._embedded,data._links);
+	}).catch(error => console.error('Error:', error));
+}
+
+function updateData(jsonData, links) {
+	let employees = jsonData.empleadoes;
+	updateTable(employees);
+	updateActionsButtons(links);
+}
+
+function updateActionsButtons(links) {
+	prevBtn.disabled = (links.prev === undefined);
+	nextBtn.disabled = (links.next === undefined);
+	prevBtn.setAttribute("href", links.prev ? links.prev.href : "#");
+	nextBtn.setAttribute("href",  links.next ? links.next.href : "#");
+	firstBtn.setAttribute("href", links.first.href);
+	lastBtn.setAttribute("href", links.last.href);
+}
+	
 function updateTable(empleados) {
 	const cuerpoTabla = tabla.getElementsByTagName("tbody")[0];
 	cuerpoTabla.innerHTML = "";
