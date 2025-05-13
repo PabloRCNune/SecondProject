@@ -84,11 +84,11 @@ function updateTable(empleados) {
 	cuerpoTabla.innerHTML = "";
 
 	empleados.forEach(empleado => {
-		newRowTable(cuerpoTabla, empleado.id, empleado.dni, empleado.nombre, empleado.apellidos);
+		newRowTable(cuerpoTabla, empleado._links.delete.href, empleado.dni, empleado.nombre, empleado.apellidos);
 	});
 }
 
-function newRowTable(tableBody, id, ...valores) {
+function newRowTable(tableBody, hrefdelete, ...valores) {
 	let tableRow = document.createElement("tr");
 	valores.forEach(element => {
 		let dato = document.createElement("td");
@@ -100,7 +100,7 @@ function newRowTable(tableBody, id, ...valores) {
 	let btnDelete = document.createElement("button");
 	let nameBtnDelete = document.createTextNode("Eliminar");
 	btnDelete.appendChild(nameBtnDelete);
-	btnDelete.setAttribute("data-el_id", id);
+	btnDelete.setAttribute("data-href_delete", hrefdelete);
 	btnDelete.addEventListener("click", deleteEmpleado);
 	btnDelete.setAttribute("class", "btn btn-outline-danger");
 
@@ -110,10 +110,10 @@ function newRowTable(tableBody, id, ...valores) {
 	let btnUpdate = document.createElement("button");
 	let nameBtnUpdate = document.createTextNode("Modificar");
 	btnUpdate.appendChild(nameBtnUpdate);
-	btnUpdate.setAttribute("data-el_id", id);
-	btnUpdate.addEventListener("click", ()=>{
-		window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons?id="+id);
-	});
+//	btnUpdate.setAttribute("data-el_id", id);
+//	btnUpdate.addEventListener("click", ()=>{
+//		window.location.assign("http://localhost:8080/PortalEmpleados/new/empleado/buttons?id="+id);
+//	});
 	btnUpdate.setAttribute("class", "btn btn-outline-secondary");
 	datoBtnUpdate.appendChild(btnUpdate);
 
@@ -123,10 +123,10 @@ function newRowTable(tableBody, id, ...valores) {
 }
 
 function deleteEmpleado() {
-	const id = this.getAttribute("data-el_id");
-	fetch(`http://localhost:8080/PortalEmpleados/delete/buttons/${id}`).then(response => {
+	const hrefdelete = this.getAttribute("data-href_delete");
+	fetch(hrefdelete).then(response => {
 		if (response.ok) {
-			tabla.deleteRow(this.parentElement.parentElement.rowIndex )
+			tabla.deleteRow(this.parentElement.parentElement.rowIndex)
 		} else {
 			console.error("Error al eliminar el empleado");
 		}

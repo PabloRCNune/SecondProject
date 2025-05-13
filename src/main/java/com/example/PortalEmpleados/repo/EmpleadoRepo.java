@@ -7,5 +7,8 @@ import com.example.PortalEmpleados.entity.Empleado;
 
 @Repository
 public interface EmpleadoRepo extends JpaRepository<Empleado, Long>{
+
+	
+	public Empleado findEmpleadosLimitB
 	
 }

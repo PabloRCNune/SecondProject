@@ -13,12 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.example.PortalEmpleados.entity.Empleado;
 import com.example.PortalEmpleados.repo.EmpleadoRepo;
+import com.example.PortalEmpleados.representation.EmployeeModelAssembler;
 
 @Service
 public class EmpServices {
 	
 	@Autowired
 	private EmpleadoRepo empleadoRepo;
+	@Autowired
+	PagedResourcesAssembler<Empleado> assembler;
+	@Autowired
+	private EmployeeModelAssembler employeeModelAssembler;
 	
 	public List<Empleado> getAllEmpleados() {
 		return empleadoRepo.findAll();
@@ -40,10 +45,10 @@ public class EmpServices {
 		Pageable pageable = PageRequest.of(page, size);
 		return empleadoRepo.findAll(pageable);
 	}
+	
 	public PagedModel<EntityModel<Empleado>> getEmployeesByPage2(int page, int size){
-		PagedResourcesAssembler<Empleado> assembler = new PagedResourcesAssembler<>(null,null);
 		Pageable pageable=PageRequest.of(page, size);
 		Page<Empleado> employees  = empleadoRepo.findAll(pageable);
-		return assembler.toModel(employees);
+		return assembler.toModel(employees, employeeModelAssembler);
 	}
 }
