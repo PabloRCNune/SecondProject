@@ -1,5 +1,8 @@
 package com.example.PortalEmpleados.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.EntityModel;
@@ -36,4 +39,12 @@ public class DataEmployerController {
     public ResponseEntity<Empleado> getEmpleadoById(@PathVariable Long id) {
         return ResponseEntity.ok(empServices.getEmpleadoById(id));
     }
+	@GetMapping("tabla3")
+	public ResponseEntity<List<Empleado>> getEmployees3(@RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "0") int offset){
+        return ResponseEntity.ok(empServices.getEmpleadosLimitOffset(limit, offset));
+	}
+	@GetMapping("tabla4")
+	public Map<String, Object> getEmployees4(@RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "0") int offset, @RequestParam int draw){
+		return empServices.getEmpleadosLimitOffset2(limit, offset, draw);
+	}
 }
